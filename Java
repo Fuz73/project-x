@@ -1,0 +1,236 @@
+import java.util.ArrayList; 
+import java.util.Arrays; 
+import java.util.List; 
+public class FourSum { 
+ public static List<List<Integer>> fourSum(int[] nums, 
+int target) { 
+ List<List<Integer>> result = new ArrayList<>(); 
+ if (nums == null || nums.length < 4) { 
+ return result; 
+ } 
+ Arrays.sort(nums); 
+ for (int i = 0; i < nums.length - 3; i++) { 
+ if (i > 0 && nums[i] == nums[i - 1]) continue; // 
+Skip duplicates for i 
+ for (int j = i + 1; j < nums.length - 2; j++) { 
+ if (j > i + 1 && nums[j] == nums[j - 1]) continue; 
+// Skip duplicates for j 
+ int left = j + 1; 
+ int right = nums.length - 1; 
+ while (left < right) { 
+ int sum = nums[i] + nums[j] + nums[left] + 
+nums[right]; 
+ if (sum == target) { 
+ result.add(Arrays.asList(nums[i], nums[j], 
+nums[left], nums[right])); 
+ while (left < right && nums[left] == 
+nums[left + 1]) left++; // Skip duplicates for left 
+ while (left < right && nums[right] == 
+nums[right - 1]) right--; // Skip duplicates for right 
+ left++; 
+ right--; 
+ } else if (sum < target) { 
+ left++; 
+ } else { 
+ right--; 
+ } 
+ } 
+ } 
+ } 
+ return result; 
+ } 
+ public static void main(String[] args) { 
+ int[] nums1 = {1, 0, -1, 0, -2, 2}; 
+ int target1 = 0; 
+ System.out.println(fourSum(nums1, target1)); // 
+Output: [[-2,-1,1,2], [-2,0,0,2], [-1,0,0,1]] 
+ int[] nums2 = {2, 2, 2, 2, 2}; 
+ int target2 = 8; 
+ System.out.println(fourSum(nums2, target2)); // 
+Output: [[2, 2, 2, 2]] 
+ } 
+} 
+2
+nd
+import java.util.ArrayList; 
+import java.util.Arrays; 
+import java.util.HashMap; 
+import java.util.List; 
+import java.util.Map; 
+public class GroupAnagrams { 
+ public static List<List<String>> 
+groupAnagrams(String[] strs) { 
+ if (strs == null || strs.length == 0) { 
+ return new ArrayList<>(); 
+ } 
+ Map<String, List<String>> map = new 
+HashMap<>(); 
+ for (String str : strs) { 
+ char[] charArray = str.toCharArray(); 
+ Arrays.sort(charArray); 
+ String sortedStr = new String(charArray); 
+ if (!map.containsKey(sortedStr)) { 
+ map.put(sortedStr, new ArrayList<>()); 
+ } 
+ map.get(sortedStr).add(str); 
+ } 
+ return new ArrayList<>(map.values()); 
+ } 
+ public static void main(String[] args) { 
+ String[] strs = {"eat", "tea", "tan", "ate", "nat", 
+"bat"}; 
+ List<List<String>> groupedAnagrams = 
+groupAnagrams(strs); 
+ for (List<String> group : groupedAnagrams) { 
+ System.out.println(group); 
+ } 
+ } 
+} 
+3
+rd
+public class JumpGame { 
+ public static boolean canJump(int[] nums) { 
+ if (nums == null || nums.length == 0) { 
+ return false; 
+ } 
+ int maxReach = 0; 
+ for (int i = 0; i < nums.length; i++) { 
+ if (i > maxReach) { 
+ return false; 
+ } 
+ maxReach = Math.max(maxReach, i + nums[i]); 
+ } 
+ return true; 
+ } 
+ public static void main(String[] args) { 
+ int[] nums1 = {2, 3, 1, 1, 4}; 
+ System.out.println(canJump(nums1)); // Output: 
+true 
+ int[] nums2 = {3, 2, 1, 0, 4}; 
+ System.out.println(canJump(nums2)); // Output: 
+false 
+ } 
+} 
+4
+th
+import java.util.HashMap; 
+import java.util.Map; 
+public class LongestSubstringKDistinct { 
+ public static int 
+lengthOfLongestSubstringKDistinct(String s, int k) { 
+ if (s == null || s.length() == 0 || k == 0) { 
+ return 0; 
+ } 
+ int maxLength = 0; 
+ Map<Character, Integer> charFrequency = new 
+HashMap<>(); 
+ int left = 0; 
+ for (int right = 0; right < s.length(); right++) { 
+ char currentChar = s.charAt(right); 
+ charFrequency.put(currentChar, 
+charFrequency.getOrDefault(currentChar, 0) + 1); 
+ while (charFrequency.size() > k) { 
+ char leftChar = s.charAt(left); 
+ charFrequency.put(leftChar, 
+charFrequency.get(leftChar) - 1); 
+ if (charFrequency.get(leftChar) == 0) { 
+ charFrequency.remove(leftChar); 
+ } 
+ left++; 
+ } 
+ maxLength = Math.max(maxLength, right - left + 
+1); 
+ } 
+ return maxLength; 
+ } 
+ public static void main(String[] args) { 
+ 
+System.out.println(lengthOfLongestSubstringKDistinct("
+eceba", 2)); // Output: 3 
+ 
+System.out.println(lengthOfLongestSubstringKDistinct("
+aa", 1)); // Output: 2 
+ } 
+} 
+5
+th
+import java.util.PriorityQueue; 
+class ListNode { 
+ int val; 
+ ListNode next; 
+ ListNode(int x) { 
+ val = x; 
+ next = null; 
+ } 
+} 
+public class MergeKSortedLists { 
+ public static ListNode mergeKLists(ListNode[] lists) { 
+ if (lists == null || lists.length == 0) { 
+ return null; 
+ } 
+ PriorityQueue<ListNode> minHeap = new 
+PriorityQueue<>((a, b) -> a.val - b.val); 
+ for (ListNode list : lists) { 
+ if (list != null) { 
+ minHeap.offer(list); 
+ } 
+ } 
+ ListNode dummy = new ListNode(0); 
+ ListNode current = dummy; 
+ while (!minHeap.isEmpty()) { 
+ ListNode node = minHeap.poll(); 
+ current.next = node; 
+ current = current.next; 
+ if (node.next != null) { 
+ minHeap.offer(node.next); 
+ } 
+ } 
+ return dummy.next; 
+ } 
+ public static void main(String[] args) { 
+ ListNode list1 = new ListNode(1); 
+ list1.next = new ListNode(4); 
+ list1.next.next = new ListNode(5); 
+ ListNode list2 = new ListNode(1); 
+ list2.next = new ListNode(3); 
+ list2.next.next = new ListNode(4); 
+ ListNode list3 = new ListNode(2); 
+ list3.next = new ListNode(6); 
+ ListNode[] lists = new ListNode[]{list1, list2, list3}; 
+ ListNode result = mergeKLists(lists); 
+ while (result != null) { 
+ System.out.print(result.val + " "); 
+ result = result.next; 
+ } 
+ } 
+} 
+6
+th
+public class ProductOfArrayExceptSelf { 
+ public static int[] productExceptSelf(int[] nums) { 
+ int n = nums.length; 
+ int[] answer = new int[n]; 
+ // Initialize the answer array with 1s 
+ for (int i = 0; i < n; i++) { 
+ answer[i] = 1; 
+ } 
+ // Calculate the left products 
+ int leftProduct = 1; 
+ for (int i = 0; i < n; i++) { 
+ answer[i] = leftProduct; 
+ leftProduct *= nums[i]; 
+ } 
+ // Calculate the right products and combine with 
+the left products 
+ int rightProduct = 1; 
+ for (int i = n - 1; i >= 0; i--) { 
+ answer[i] *= rightProduct; 
+ rightProduct *= nums[i]; 
+ } 
+ return answer; 
+ } 
+ public static void main(String[] args) { 
+ int[] nums = {1, 2, 3, 4}; 
+ int[] result = productExceptSelf(nums); 
+ for (int num : result) { 
+ System.out.print(num + " ");
